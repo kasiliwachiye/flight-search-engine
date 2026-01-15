@@ -31,7 +31,27 @@ export default function SearchForm() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const params = buildSearchParams(formState);
+    const nextSearch = buildSearchParams(formState);
+    const params = new URLSearchParams(searchParams.toString());
+    const searchKeys = [
+      "origin",
+      "destination",
+      "departDate",
+      "returnDate",
+      "adults",
+      "cabin",
+      "trip",
+    ];
+
+    searchKeys.forEach((key) => {
+      const value = nextSearch.get(key);
+      if (value) {
+        params.set(key, value);
+      } else {
+        params.delete(key);
+      }
+    });
+
     const queryString = params.toString();
     router.push(queryString ? `/?${queryString}` : "/");
   };
