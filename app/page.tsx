@@ -1,3 +1,4 @@
+import ResultsPanel from "@/components/ResultsPanel";
 import SearchForm from "@/components/SearchForm";
 
 export default function Home() {
@@ -18,10 +19,7 @@ export default function Home() {
         </header>
 
         <SearchForm />
-
-        <section className="rounded-3xl border border-border bg-white/70 p-6 text-sm text-muted shadow-[var(--shadow-soft)]">
-          Results and insights will appear after your first search.
-        </section>
+        <ResultsPanel />
       </div>
     </main>
   );

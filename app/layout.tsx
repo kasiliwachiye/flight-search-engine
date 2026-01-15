@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Fraunces, Sora } from "next/font/google";
+import QueryProvider from "@/components/QueryProvider";
 import "./globals.css";
 
 const sora = Sora({
@@ -29,7 +30,7 @@ export default function RootLayout({
       <body
         className={`${sora.variable} ${fraunces.variable} min-h-screen bg-background text-ink antialiased`}
       >
-        {children}
+        <QueryProvider>{children}</QueryProvider>
       </body>
     </html>
   );
