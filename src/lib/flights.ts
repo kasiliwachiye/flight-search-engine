@@ -1,4 +1,4 @@
-﻿import type { FlightOffersResponse } from "@/domain/types";
+import type { FlightOffersResponse } from "@/domain/types";
 import type { SearchFormState } from "@/state/urlState";
 
 export function buildFlightsQuery(state: SearchFormState): string {

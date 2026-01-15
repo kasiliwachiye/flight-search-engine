@@ -1,4 +1,4 @@
-﻿import type { FlightOffer } from "@/domain/types";
+import type { FlightOffer } from "@/domain/types";
 import { formatCurrency, formatStops } from "@/lib/format";
 import { getTotalDurationMinutes, type SortOption } from "@/lib/flightUtils";
 import { formatDuration, formatTime } from "@/lib/time";
@@ -123,11 +123,11 @@ export default function ResultsList({
                           </span>
                         </div>
                         <div className="text-xs text-muted">
-                          {formatDuration(itinerary.durationMinutes)} · {formatStops(stops)}
+                          {formatDuration(itinerary.durationMinutes)} - {formatStops(stops)}
                         </div>
                       </div>
                       <p className="mt-2 text-xs text-muted">
-                        {label} · {itinerary.segments.length} segments
+                        {label} - {itinerary.segments.length} segments
                       </p>
                     </div>
                   );

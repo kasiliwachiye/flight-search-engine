@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import {
   useEffect,
@@ -29,7 +29,7 @@ function formatOption(option: LocationOption): string {
 
 function formatSecondary(option: LocationOption): string {
   const parts = [option.name, option.country].filter(Boolean);
-  return parts.join(" · ");
+  return parts.join(" - ");
 }
 
 export default function AirportTypeahead({

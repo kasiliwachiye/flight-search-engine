@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -7,6 +7,7 @@ import AirportTypeahead from "@/components/AirportTypeahead";
 import {
   buildSearchParams,
   defaultSearchState,
+  isSearchReady,
   parseSearchParams,
   SearchFormState,
 } from "@/state/urlState";
@@ -18,30 +19,85 @@ const cabinOptions = [
   { label: "First", value: "FIRST" },
 ] as const;
 
+const searchKeys = [
+  "origin",
+  "destination",
+  "departDate",
+  "returnDate",
+  "adults",
+  "cabin",
+  "trip",
+] as const;
+
+const recentStorageKey = "flight-search-recent";
+
+type RecentSearch = SearchFormState;
+
 export default function SearchForm() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [formState, setFormState] = useState<SearchFormState>(defaultSearchState);
+  const [recentSearches, setRecentSearches] = useState<RecentSearch[]>([]);
 
   useEffect(() => {
     setFormState(parseSearchParams(searchParams));
   }, [searchParams]);
 
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+    const stored = window.localStorage.getItem(recentStorageKey);
+    if (!stored) {
+      return;
+    }
+    try {
+      const parsed = JSON.parse(stored) as RecentSearch[];
+      if (Array.isArray(parsed)) {
+        setRecentSearches(parsed);
+      }
+    } catch {
+      setRecentSearches([]);
+    }
+  }, []);
+
   const today = useMemo(() => new Date().toISOString().slice(0, 10), []);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const nextSearch = buildSearchParams(formState);
+  const persistRecent = (next: RecentSearch[]) => {
+    setRecentSearches(next);
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem(recentStorageKey, JSON.stringify(next));
+    }
+  };
+
+  const serializeRecent = (search: RecentSearch) =>
+    [
+      search.origin,
+      search.destination,
+      search.departDate,
+      search.returnDate,
+      search.adults,
+      search.cabin,
+      search.tripType,
+    ].join("|");
+
+  const addRecentSearch = (search: RecentSearch) => {
+    const normalized: RecentSearch = {
+      ...search,
+      origin: search.origin.trim().toUpperCase(),
+      destination: search.destination.trim().toUpperCase(),
+    };
+    const key = serializeRecent(normalized);
+    const next = [
+      normalized,
+      ...recentSearches.filter((item) => serializeRecent(item) !== key),
+    ].slice(0, 5);
+    persistRecent(next);
+  };
+
+  const navigateWithState = (state: SearchFormState) => {
+    const nextSearch = buildSearchParams(state);
     const params = new URLSearchParams(searchParams.toString());
-    const searchKeys = [
-      "origin",
-      "destination",
-      "departDate",
-      "returnDate",
-      "adults",
-      "cabin",
-      "trip",
-    ];
 
     searchKeys.forEach((key) => {
       const value = nextSearch.get(key);
@@ -54,6 +110,22 @@ export default function SearchForm() {
 
     const queryString = params.toString();
     router.push(queryString ? `/?${queryString}` : "/");
+  };
+
+  const handleSwap = () => {
+    setFormState((prev) => ({
+      ...prev,
+      origin: prev.destination,
+      destination: prev.origin,
+    }));
+  };
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (isSearchReady(formState)) {
+      addRecentSearch(formState);
+    }
+    navigateWithState(formState);
   };
 
   return (
@@ -102,25 +174,33 @@ export default function SearchForm() {
       </div>
 
       <div className="grid gap-4 lg:grid-cols-12">
-        <div className="lg:col-span-3">
-          <AirportTypeahead
-            label="Origin"
-            placeholder="City or IATA"
-            value={formState.origin}
-            onChange={(value) =>
-              setFormState((prev) => ({ ...prev, origin: value }))
-            }
-          />
-        </div>
-        <div className="lg:col-span-3">
-          <AirportTypeahead
-            label="Destination"
-            placeholder="City or IATA"
-            value={formState.destination}
-            onChange={(value) =>
-              setFormState((prev) => ({ ...prev, destination: value }))
-            }
-          />
+        <div className="lg:col-span-6">
+          <div className="grid gap-3 sm:grid-cols-[1fr,auto,1fr] sm:items-end">
+            <AirportTypeahead
+              label="Origin"
+              placeholder="City or IATA"
+              value={formState.origin}
+              onChange={(value) =>
+                setFormState((prev) => ({ ...prev, origin: value }))
+              }
+            />
+            <button
+              type="button"
+              onClick={handleSwap}
+              className="mt-6 h-10 rounded-full border border-border px-4 text-xs font-semibold uppercase tracking-[0.2em] text-muted hover:border-accent/60 hover:text-ink sm:mt-0"
+              aria-label="Swap origin and destination"
+            >
+              Swap
+            </button>
+            <AirportTypeahead
+              label="Destination"
+              placeholder="City or IATA"
+              value={formState.destination}
+              onChange={(value) =>
+                setFormState((prev) => ({ ...prev, destination: value }))
+              }
+            />
+          </div>
         </div>
         <div className="lg:col-span-2">
           <label className="text-xs font-semibold uppercase tracking-[0.2em] text-muted">
@@ -204,7 +284,7 @@ export default function SearchForm() {
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="fixed inset-x-6 bottom-4 z-30 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border bg-white/95 p-3 shadow-lg lg:static lg:inset-x-auto lg:bottom-auto lg:z-auto lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none">
         <p className="text-xs text-muted">
           Type a city or airport code. Results update on search.
         </p>
@@ -215,6 +295,29 @@ export default function SearchForm() {
           Search flights
         </button>
       </div>
+
+      {recentSearches.length > 0 && (
+        <div className="flex flex-col gap-2 text-xs text-muted">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted">
+            Recent searches
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {recentSearches.map((search, index) => (
+              <button
+                key={`${search.origin}-${search.destination}-${index}`}
+                type="button"
+                onClick={() => {
+                  setFormState(search);
+                  navigateWithState(search);
+                }}
+                className="rounded-full border border-border bg-white/80 px-3 py-2 text-xs font-semibold text-ink hover:border-accent/60"
+              >
+                {search.origin} to {search.destination} - {search.departDate}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </form>
   );
 }

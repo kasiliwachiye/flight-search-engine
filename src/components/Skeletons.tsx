@@ -1,4 +1,4 @@
-﻿export function ResultsSkeleton() {
+export function ResultsSkeleton() {
   return (
     <div className="flex flex-col gap-4">
       {Array.from({ length: 3 }).map((_, index) => (

@@ -1,4 +1,4 @@
-﻿import type { FlightOffer } from "@/domain/types";
+import type { FlightOffer } from "@/domain/types";
 
 export type SortOption = "cheapest" | "fastest" | "best";
 

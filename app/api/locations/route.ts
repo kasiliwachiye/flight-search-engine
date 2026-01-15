@@ -1,4 +1,4 @@
-﻿import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { z } from "zod";
 import { amadeusLocationsResponseSchema } from "@/domain/amadeus";
 import { mapLocations } from "@/domain/locations";

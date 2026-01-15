@@ -1,7 +1,8 @@
-﻿"use client";
+"use client";
 
 import { useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import clsx from "clsx";
 import FiltersPanel from "@/components/FiltersPanel";
 import PriceChart from "@/components/PriceChart";
 import { useQuery } from "@tanstack/react-query";
@@ -38,6 +39,8 @@ export default function ResultsPanel() {
   const searchKey = useMemo(() => searchKeyFromState(searchState), [searchState]);
 
   const [sort, setSort] = useState<SortOption>("cheapest");
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [showChart, setShowChart] = useState(true);
 
   const query = useQuery({
     queryKey: ["flights", searchKey],
@@ -152,38 +155,99 @@ export default function ResultsPanel() {
   }
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[280px,1fr]">
-      <FiltersPanel
-        filters={filters}
-        priceBounds={priceBounds}
-        airlines={airlineOptions}
-        currency={currency}
-        onStopsToggle={toggleStop}
-        onAirlineToggle={toggleAirline}
-        onPriceChange={(range) =>
-          updateFilters({ ...filters, priceRange: range })
-        }
-        onReset={resetFilters}
-      />
-      <div className="flex flex-col gap-6">
-        {trendData.length > 0 && (
-          <PriceChart data={trendData} currency={currency} />
-        )}
-        {sortedOffers.length === 0 ? (
-          <EmptyState
-            title="No flights match these filters"
-            description="Try widening the price range or clearing an airline filter."
+    <>
+      <div className="grid gap-6 lg:grid-cols-[280px,1fr]">
+        <div className="hidden lg:block">
+          <FiltersPanel
+            filters={filters}
+            priceBounds={priceBounds}
+            airlines={airlineOptions}
+            currency={currency}
+            onStopsToggle={toggleStop}
+            onAirlineToggle={toggleAirline}
+            onPriceChange={(range) =>
+              updateFilters({ ...filters, priceRange: range })
+            }
+            onReset={resetFilters}
           />
-        ) : (
-          <ResultsList
-            offers={sortedOffers}
-            carriers={carriers}
-            sort={sort}
-            onSortChange={setSort}
-          />
-        )}
+        </div>
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-wrap items-center justify-between gap-3 lg:hidden">
+            <button
+              type="button"
+              onClick={() => setFiltersOpen(true)}
+              className="rounded-full border border-border bg-white/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-ink"
+            >
+              Filters
+            </button>
+            <p className="text-xs text-muted">
+              {sortedOffers.length} flights
+            </p>
+          </div>
+
+          {trendData.length > 0 && (
+            <>
+              <button
+                type="button"
+                onClick={() => setShowChart((prev) => !prev)}
+                className="flex items-center justify-between rounded-2xl border border-border bg-white/80 px-4 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-ink lg:hidden"
+              >
+                {showChart ? "Hide price trend" : "Show price trend"}
+                <span>{showChart ? "-" : "+"}</span>
+              </button>
+              <div className={clsx(showChart ? "block" : "hidden", "lg:block")}>
+                <PriceChart data={trendData} currency={currency} />
+              </div>
+            </>
+          )}
+
+          {sortedOffers.length === 0 ? (
+            <EmptyState
+              title="No flights match these filters"
+              description="Try widening the price range or clearing an airline filter."
+            />
+          ) : (
+            <ResultsList
+              offers={sortedOffers}
+              carriers={carriers}
+              sort={sort}
+              onSortChange={setSort}
+            />
+          )}
+        </div>
       </div>
-    </div>
+
+      {filtersOpen && (
+        <div className="fixed inset-0 z-40 flex items-end bg-black/40 lg:hidden">
+          <div className="w-full rounded-t-3xl bg-background p-4 shadow-xl">
+            <div className="flex items-center justify-between px-2 pb-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted">
+                Filters
+              </p>
+              <button
+                type="button"
+                onClick={() => setFiltersOpen(false)}
+                className="rounded-full border border-border bg-white px-3 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-ink"
+              >
+                Done
+              </button>
+            </div>
+            <FiltersPanel
+              filters={filters}
+              priceBounds={priceBounds}
+              airlines={airlineOptions}
+              currency={currency}
+              onStopsToggle={toggleStop}
+              onAirlineToggle={toggleAirline}
+              onPriceChange={(range) =>
+                updateFilters({ ...filters, priceRange: range })
+              }
+              onReset={resetFilters}
+            />
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 

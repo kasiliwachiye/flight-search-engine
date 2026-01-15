@@ -1,4 +1,4 @@
-﻿import type { FlightOffer } from "@/domain/types";
+import type { FlightOffer } from "@/domain/types";
 import type { FiltersState, PriceBounds } from "@/state/filterState";
 
 export function getPriceBounds(offers: FlightOffer[]): PriceBounds {

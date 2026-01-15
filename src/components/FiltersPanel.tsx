@@ -1,4 +1,4 @@
-﻿import clsx from "clsx";
+import clsx from "clsx";
 import { formatCurrency } from "@/lib/format";
 import type { FiltersState, PriceBounds } from "@/state/filterState";
 

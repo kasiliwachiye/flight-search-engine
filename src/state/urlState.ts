@@ -1,4 +1,4 @@
-﻿import type { CabinClass } from "@/domain/types";
+import type { CabinClass } from "@/domain/types";
 
 export type TripType = "oneway" | "roundtrip";
 

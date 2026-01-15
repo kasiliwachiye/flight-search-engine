@@ -1,4 +1,4 @@
-﻿import type { AmadeusLocationsResponse } from "@/domain/amadeus";
+import type { AmadeusLocationsResponse } from "@/domain/amadeus";
 import type { LocationOption } from "@/domain/types";
 
 export function mapLocations(response: AmadeusLocationsResponse): LocationOption[] {

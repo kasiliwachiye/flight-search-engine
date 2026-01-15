@@ -1,4 +1,4 @@
-﻿import type { LocationOption } from "@/domain/types";
+import type { LocationOption } from "@/domain/types";
 
 export const AIRPORTS: LocationOption[] = [
   {

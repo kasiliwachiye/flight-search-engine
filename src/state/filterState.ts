@@ -1,4 +1,4 @@
-﻿export type PriceBounds = {
+export type PriceBounds = {
   min: number;
   max: number;
 };

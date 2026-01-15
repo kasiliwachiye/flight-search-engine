@@ -1,4 +1,4 @@
-﻿export function formatCurrency(
+export function formatCurrency(
   amount: number,
   currency: string,
   locale = "en-US"

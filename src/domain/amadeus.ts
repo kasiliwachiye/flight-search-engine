@@ -1,4 +1,4 @@
-﻿import { z } from "zod";
+import { z } from "zod";
 
 export const amadeusTokenSchema = z.object({
   access_token: z.string(),

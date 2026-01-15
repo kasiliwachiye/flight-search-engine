@@ -1,4 +1,4 @@
-﻿import type { LocationOption } from "@/domain/types";
+import type { LocationOption } from "@/domain/types";
 import { searchAirports } from "@/lib/airports";
 
 export async function searchLocations(keyword: string): Promise<LocationOption[]> {

@@ -3,7 +3,7 @@ import SearchForm from "@/components/SearchForm";
 
 export default function Home() {
   return (
-    <main className="min-h-screen px-6 py-10">
+    <main className="min-h-screen px-6 pb-28 pt-10 lg:pb-10">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-8">
         <header className="flex flex-col gap-4">
           <p className="text-xs font-semibold uppercase tracking-[0.35em] text-muted">
