@@ -3,12 +3,14 @@
 import { useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import FiltersPanel from "@/components/FiltersPanel";
+import PriceChart from "@/components/PriceChart";
 import { useQuery } from "@tanstack/react-query";
 import ResultsList from "@/components/ResultsList";
 import { EmptyState } from "@/components/EmptyStates";
 import { ResultsSkeleton } from "@/components/Skeletons";
 import type { FlightOffer } from "@/domain/types";
 import { applyFilters, getPriceBounds } from "@/lib/filters";
+import { buildPriceTrend } from "@/lib/priceTrend";
 import { fetchFlights } from "@/lib/flights";
 import { sortOffers, type SortOption } from "@/lib/flightUtils";
 import {
@@ -61,6 +63,12 @@ export default function ResultsPanel() {
     [filteredOffers, sort]
   );
   const currency = offers[0]?.price.currency ?? "USD";
+  const returnDate =
+    searchState.tripType === "roundtrip" ? searchState.returnDate : undefined;
+  const trendData = useMemo(
+    () => buildPriceTrend(filteredOffers, searchState.departDate, returnDate),
+    [filteredOffers, returnDate, searchState.departDate]
+  );
 
   const airlineOptions = useMemo(() => {
     const codes = new Set<string>();
@@ -157,19 +165,24 @@ export default function ResultsPanel() {
         }
         onReset={resetFilters}
       />
-      {sortedOffers.length === 0 ? (
-        <EmptyState
-          title="No flights match these filters"
-          description="Try widening the price range or clearing an airline filter."
-        />
-      ) : (
-        <ResultsList
-          offers={sortedOffers}
-          carriers={carriers}
-          sort={sort}
-          onSortChange={setSort}
-        />
-      )}
+      <div className="flex flex-col gap-6">
+        {trendData.length > 0 && (
+          <PriceChart data={trendData} currency={currency} />
+        )}
+        {sortedOffers.length === 0 ? (
+          <EmptyState
+            title="No flights match these filters"
+            description="Try widening the price range or clearing an airline filter."
+          />
+        ) : (
+          <ResultsList
+            offers={sortedOffers}
+            carriers={carriers}
+            sort={sort}
+            onSortChange={setSort}
+          />
+        )}
+      </div>
     </div>
   );
 }
