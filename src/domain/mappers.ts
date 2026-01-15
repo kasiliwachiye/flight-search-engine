@@ -1,4 +1,4 @@
-import type { FlightOffer, FlightOffersResponse } from "@/domain/types";
+﻿import type { FlightOffer, FlightOffersResponse } from "@/domain/types";
 import type { AmadeusFlightOffersResponse } from "@/domain/amadeus";
 import { parseIsoDurationToMinutes } from "@/lib/time";
 
@@ -61,3 +61,4 @@ export function mapFlightOffers(
 
   return { offers, carriers };
 }
+

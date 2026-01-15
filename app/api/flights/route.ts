@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { z } from "zod";
 import { amadeusFlightOffersResponseSchema } from "@/domain/amadeus";
 import { mapFlightOffers } from "@/domain/mappers";
@@ -88,3 +88,4 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
+

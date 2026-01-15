@@ -1,4 +1,4 @@
-import { z } from "zod";
+﻿import { z } from "zod";
 
 export const amadeusTokenSchema = z.object({
   access_token: z.string(),
@@ -46,7 +46,28 @@ export const amadeusFlightOffersResponseSchema = z.object({
     .optional(),
 });
 
+export const amadeusLocationSchema = z.object({
+  iataCode: z.string(),
+  name: z.string(),
+  subType: z.enum(["AIRPORT", "CITY"]),
+  address: z
+    .object({
+      cityName: z.string().optional(),
+      countryName: z.string().optional(),
+      countryCode: z.string().optional(),
+    })
+    .optional(),
+});
+
+export const amadeusLocationsResponseSchema = z.object({
+  data: z.array(amadeusLocationSchema),
+});
+
 export type AmadeusTokenResponse = z.infer<typeof amadeusTokenSchema>;
 export type AmadeusFlightOffersResponse = z.infer<
   typeof amadeusFlightOffersResponseSchema
 >;
+export type AmadeusLocationsResponse = z.infer<
+  typeof amadeusLocationsResponseSchema
+>;
+

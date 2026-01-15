@@ -1,7 +1,9 @@
+import SearchForm from "@/components/SearchForm";
+
 export default function Home() {
   return (
     <main className="min-h-screen px-6 py-10">
-      <div className="mx-auto flex w-full max-w-5xl flex-col gap-10">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-8">
         <header className="flex flex-col gap-4">
           <p className="text-xs font-semibold uppercase tracking-[0.35em] text-muted">
             Skybound
@@ -14,12 +16,11 @@ export default function Home() {
             update the moment you refine your search.
           </p>
         </header>
-        <section className="rounded-3xl border border-border bg-surface p-8 shadow-[var(--shadow-soft)]">
-          <div className="flex flex-col gap-3 text-sm text-muted">
-            <div className="h-3 w-24 rounded-full bg-border/70" />
-            <div className="h-4 w-60 rounded-full bg-border/60" />
-            <div className="h-4 w-40 rounded-full bg-border/50" />
-          </div>
+
+        <SearchForm />
+
+        <section className="rounded-3xl border border-border bg-white/70 p-6 text-sm text-muted shadow-[var(--shadow-soft)]">
+          Results and insights will appear after your first search.
         </section>
       </div>
     </main>

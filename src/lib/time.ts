@@ -1,4 +1,4 @@
-export function parseIsoDurationToMinutes(duration: string): number {
+﻿export function parseIsoDurationToMinutes(duration: string): number {
   const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?/);
   if (!match) {
     return 0;
@@ -50,3 +50,4 @@ export function formatDate(isoDate: string, locale = "en-US"): string {
     day: "numeric",
   }).format(date);
 }
+

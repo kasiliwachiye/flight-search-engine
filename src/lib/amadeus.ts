@@ -1,4 +1,4 @@
-import { amadeusTokenSchema } from "@/domain/amadeus";
+﻿import { amadeusTokenSchema } from "@/domain/amadeus";
 
 const DEFAULT_HOST = "https://test.api.amadeus.com";
 const TOKEN_REFRESH_BUFFER_MS = 60_000;
@@ -79,3 +79,4 @@ export async function amadeusFetch(
     cache: "no-store",
   });
 }
+

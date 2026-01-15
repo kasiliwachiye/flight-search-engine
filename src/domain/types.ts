@@ -1,4 +1,4 @@
-export type CabinClass = "ECONOMY" | "PREMIUM_ECONOMY" | "BUSINESS" | "FIRST";
+﻿export type CabinClass = "ECONOMY" | "PREMIUM_ECONOMY" | "BUSINESS" | "FIRST";
 
 export type FlightSearchParams = {
   origin: string;
@@ -45,3 +45,13 @@ export type FlightOffersResponse = {
   offers: FlightOffer[];
   carriers: Record<string, string>;
 };
+
+export type LocationOption = {
+  iata: string;
+  name: string;
+  city: string;
+  country: string;
+  countryCode?: string;
+  subType: "AIRPORT" | "CITY";
+};
+
