@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Skybound Flight Search
 
-## Getting Started
+A responsive flight search experience built with Next.js App Router, TypeScript, Tailwind CSS, TanStack Query, Zod, and Recharts. It uses Amadeus Self-Service Test for live flight offers and derives a price trend series from current results.
 
-First, run the development server:
+## Links
+
+- GitHub Repo: <ADD_REPO_LINK>
+- Live Demo: <ADD_LIVE_LINK>
+
+## Setup
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Create a `.env.local` file based on `.env.example` and add your Amadeus credentials.
+
+3. Run the app:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Environment Variables
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+AMADEUS_CLIENT_ID=
+AMADEUS_CLIENT_SECRET=
+AMADEUS_HOST=https://test.api.amadeus.com
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Data Strategy
 
-## Learn More
+- Flight offers come from the Amadeus Flight Offers Search endpoint via server routes.
+- The price trend chart is derived from the current filtered offers, not historical pricing.
+- For each leg, it builds a +/- 3 day window around the selected date and uses the lowest offer price as a baseline with a deterministic variance so the line feels realistic and updates instantly as filters change.
 
-To learn more about Next.js, take a look at the following resources:
+## Filtering
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Filters are applied client-side and update results and the chart simultaneously:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Stops: nonstop, 1 stop, 2+ stops
+- Price range: derived from current results
+- Airlines: multi-select from carriers present in the results
 
-## Deploy on Vercel
+Filters are persisted in the URL, so searches and refinements can be shared.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Scripts
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run lint
+npm run test
+npm run build
+```
+
+## Deployment (Vercel)
+
+- Add the environment variables in your Vercel project settings.
+- Deploy from the main branch.
+
+## Loom Walkthrough Script (3 to 4 minutes)
+
+- 0:00 - 0:30: Intro, problem statement, and stack overview
+- 0:30 - 1:10: Search form with typeahead and URL-driven state
+- 1:10 - 2:00: Results list, sorting, and loading/empty states
+- 2:00 - 2:45: Filters in action and how the chart updates live
+- 2:45 - 3:20: Responsive behavior (drawer filters, sticky search)
+- 3:20 - 3:50: Key implementation notes (server proxy, mapping, derived trend)
