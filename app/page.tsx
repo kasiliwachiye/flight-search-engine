@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import ResultsPanel from "@/components/ResultsPanel";
 import SearchForm from "@/components/SearchForm";
 
@@ -18,8 +19,28 @@ export default function Home() {
           </p>
         </header>
 
-        <SearchForm />
-        <ResultsPanel />
+        <Suspense
+          fallback={
+            <div className="rounded-3xl border border-border bg-white/70 p-6 shadow-[var(--shadow-soft)]">
+              <div className="h-4 w-32 rounded-full bg-border/60" />
+              <div className="mt-3 h-3 w-56 rounded-full bg-border/50" />
+              <div className="mt-6 h-12 w-full rounded-2xl bg-border/50" />
+            </div>
+          }
+        >
+          <SearchForm />
+        </Suspense>
+        <Suspense
+          fallback={
+            <div className="rounded-3xl border border-border bg-white/70 p-6 shadow-[var(--shadow-soft)]">
+              <div className="h-4 w-40 rounded-full bg-border/60" />
+              <div className="mt-3 h-3 w-64 rounded-full bg-border/50" />
+              <div className="mt-6 h-24 w-full rounded-2xl bg-border/50" />
+            </div>
+          }
+        >
+          <ResultsPanel />
+        </Suspense>
       </div>
     </main>
   );

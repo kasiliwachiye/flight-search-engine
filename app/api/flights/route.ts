@@ -64,12 +64,11 @@ export async function GET(request: Request) {
     const payload = await response.json();
 
     if (!response.ok) {
-      return NextResponse.json(
-        {
-          error: payload?.errors?.[0]?.detail ?? "Unable to fetch flights",
-        },
-        { status: response.status }
-      );
+      const message =
+        response.status === 429
+          ? "Rate limit reached. Please try again shortly."
+          : payload?.errors?.[0]?.detail ?? "Unable to fetch flights";
+      return NextResponse.json({ error: message }, { status: response.status });
     }
 
     const parsed = amadeusFlightOffersResponseSchema.safeParse(payload);
