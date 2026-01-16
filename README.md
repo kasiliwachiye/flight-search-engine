@@ -55,16 +55,3 @@ npm run test
 npm run build
 ```
 
-## Deployment (Vercel)
-
-- Add the environment variables in your Vercel project settings.
-- Deploy from the main branch.
-
-## Loom Walkthrough Script (3 to 4 minutes)
-
-- 0:00 - 0:30: Intro, problem statement, and stack overview
-- 0:30 - 1:10: Search form with typeahead and URL-driven state
-- 1:10 - 2:00: Results list, sorting, and loading/empty states
-- 2:00 - 2:45: Filters in action and how the chart updates live
-- 2:45 - 3:20: Responsive behavior (drawer filters, sticky search)
-- 3:20 - 3:50: Key implementation notes (server proxy, mapping, derived trend)
